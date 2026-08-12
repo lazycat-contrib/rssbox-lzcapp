@@ -1,0 +1,52 @@
+version: 1
+
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: dist/cloud.lazycat.app.rss-translator.lpk
+  target_arch: amd64
+
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: rsstranslator
+
+build:
+  toolchains: []
+  run_buildscript: false
+
+images:
+  - id: rsstranslator
+    target: service
+    service: rsstranslator
+    source: docker.io/versun/rssbox
+    channel: stable
+    sort: semver
+    tag_regex: '^v?2025\.\d+\.\d+$'
+    delivery:
+      mode: lazycat
+
+stores:
+  official:
+    enabled: true
+    skip_if_version_exists: true
+    create_if_missing: true
+    changelog_locales: [zh, en]
+    retry:
+      enabled: false
+      max_attempts: 3
+      initial_delay: 2s
+      max_delay: 30s
+    application:
+      language: zh
+      name: RSSBox
+      source: https://github.com/versun/RSS-Translator
+      source_author: versun
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: RSSBox
+    summary: Published from GitHub Actions

@@ -1,20 +1,15 @@
-name: RSSBox
-package: cloud.lazycat.app.rss-translator
-version: 2025.9.18
-min_os_version: 1.3.8
-description: 让RSS管理更智能，让信息获取更高效
-homepage: https://github.com/versun/RSS-Translator
-author: versun
 application:
   subdomain: rss-translator
   background_task: true
   public_path:
     - /
-  routes:
-    - /=http://rsstranslator:8000/
+  upstreams:
+    - location: /
+      backend: http://rsstranslator:8000/
+
 services:
   rsstranslator:
-    # versun/rssbox:2025.9.18
+    # upstream: docker.io/versun/rssbox:2025.9.18
     image: registry.lazycat.cloud/czyt/versun/rssbox:0651b2ed8e7b5f9c
     environment:
       - SITE_URL=https://${LAZYCAT_APP_DOMAIN}
@@ -33,6 +28,7 @@ services:
       - rssbox_redis
 
   rssbox_redis:
+    # upstream: docker.io/library/redis:latest
     image: registry.lazycat.cloud/edward/library/redis:4c6b9d7b7a334a2e
     binds:
       - /lzcapp/var/redis:/data
@@ -41,14 +37,3 @@ services:
         - CMD-SHELL
         - redis-cli ping
       interval: 30s
-
-locales:
-  zh:
-    name: "RSSBox"
-    description: "让RSS管理更智能，让信息获取更高效 "
-  zh_CN:
-    name: "RSSBox"
-    description: "让RSS管理更智能，让信息获取更高效 "
-  en:
-    name: "RSSBox"
-    description: "Smarter RSS management, more efficient information access"
