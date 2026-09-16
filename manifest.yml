@@ -6,11 +6,10 @@ application:
   upstreams:
     - location: /
       backend: http://rsstranslator:8000/
-
 services:
   rsstranslator:
-    # upstream: docker.io/versun/rssbox:2025.9.18
-    image: registry.lazycat.cloud/czyt/versun/rssbox:0651b2ed8e7b5f9c
+    # upstream: docker.io/versun/rssbox:2025.12.13
+    image: registry.lazycat.cloud/czyt/versun/rssbox:a637d42196332ecc
     environment:
       - SITE_URL=https://${LAZYCAT_APP_DOMAIN}
       - REDIS_URL=redis://rssbox_redis:6379/0
@@ -26,7 +25,6 @@ services:
       - /lzcapp/var/data:/app/data
     depends_on:
       - rssbox_redis
-
   rssbox_redis:
     # upstream: docker.io/library/redis:latest
     image: registry.lazycat.cloud/edward/library/redis:4c6b9d7b7a334a2e
